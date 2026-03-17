@@ -161,8 +161,10 @@
           console.warn('[Forklift] BodyWrapper not found');
           return;
         }
-        if (typeof Sanitizer !== 'undefined') {
-          const sanitized = new Sanitizer().sanitizeFor('div', html);
+        const sanitizer = typeof Sanitizer !== 'undefined' ? new Sanitizer() : null;
+        const sanitizeFor = sanitizer && typeof sanitizer.sanitizeFor === 'function';
+        if (sanitizeFor) {
+          const sanitized = sanitizer.sanitizeFor('div', html);
           if (sanitized) bodyWrapper.replaceChildren(...sanitized.childNodes);
         } else {
           const doc = new DOMParser().parseFromString(html, 'text/html');
